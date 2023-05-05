@@ -1,4 +1,5 @@
 # Vagrant runs with sudo priviledges
+
 # Update Packages
 apt-get update
 
@@ -52,9 +53,24 @@ python3.11 -m pip install --upgrade pip
 # Install application dependencies
 python3.11 -m pip install -r ./sync_drive/requirements.txt
 
+# Install docker package
+sudo apt-get install docker.io
+
+# Install docker 
+sudo snap install docker
+
+# Install docker compose
+sudo apt-get install docker-compose
+
+# Change the access permission of the docker.sock file
+chmod 777 /var/run/docker.sock
+dckr_pat_w409cwq13STebTUuXNUpUjBOEWc
+# Login to docker hub
+# docker login
+
 # Change directories into mapped drive
-cd sync_drive
+# cd sync_drive
 
 # Start api server on forwarded guest port
-uvicorn main:app --reload --host 0.0.0.0 --port 8000
+# uvicorn main:app --reload --host 0.0.0.0 --port 8000
 

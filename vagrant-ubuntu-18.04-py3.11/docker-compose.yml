@@ -1,0 +1,64 @@
+# Test script for container orchestration
+version: '3'
+
+services:
+
+  prometheus:
+    image: prom/prometheus
+    ports:
+      - "9090:9090"
+    volumes:
+      - ./prometheus.yml:/etc/prometheus/prometheus.yml
+
+  grafana:
+    hostname: grafana
+    image: grafana/grafana
+    ports:
+      - 3000:3000
+
+  api:
+    image: ryan121/portfolio-web-repo:api
+    volumes:
+      - ./:/usr/src/app/
+      - static:/usr/src/app/static
+    expose:
+     - 8000
+    # ports:
+    #   - 8000:8000
+    # env_file:
+    #   - ./api/.env/
+    environment:
+    - DATABASE_HOSTNAME=postgres
+    - DATABASE_PORT=5432
+    - DATABASE_PASSWORD=password123
+    - DATABASE_NAME=fastapi
+    - DATABASE_USERNAME=postgres
+    - SECRET_KEY=09d25e094faa6ca2556c818166b7a9563b93f7099f6f0f4caa6cf63b88e8d3e7
+    - ALGORITHM=HS256
+    - ACCESS_TOKEN_EXPIRE_MINUTES=30
+    depends_on:
+      - postgres
+      - prometheus
+
+  nginx-api:
+    image: ryan121/portfolio-web-repo:nginx-api
+    ports:
+      - 80:80
+    volumes:
+      # - ./:/etc/nginx/conf.d/
+      - static:/home/app/static
+    depends_on:
+      - api
+      - postgres
+  postgres:
+    image: postgres
+    volumes:
+      - postgres-db:/var/lib/postresql/data
+    environment:
+      - POSTGRES_PASSWORD=password123
+      - POSTGRES_DB=fastapi
+    # ports:
+    #  - 5432:5432
+volumes:
+  static:
+  postgres-db:

@@ -36,8 +36,14 @@ Vagrant.configure("2") do |config|
 
   # Create a private network, which allows host-only access to the machine
   # using a specific IP.
+
+  # Edit host file for DNS name (e.g. IP > www.exampledns.dev)
   config.vm.network "private_network", ip: "192.168.33.10"
-  config.vm.network "forwarded_port", guest:  8000, host: 8000 
+
+  # Port forwarding from guest (VM) to host (my PC)
+  # Go to C:\Windows\System32\drivers\etc
+  # dev url is www.devsite.local
+  config.vm.network "forwarded_port", guest:  8000, host: 80
 
   # Create a public network, which generally matched to bridged network.
   # Bridged networks make the machine appear as another physical device on
